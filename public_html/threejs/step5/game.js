@@ -98,38 +98,6 @@ class Game{
 			game.player.object.add(object);
 			game.animations.Idle = object.animations[0];
             
-   
-		} );
-
-		loader.load( `${this.assetsPath}fbx/people/FireFighter.fbx`, function ( object ) {
-
-			object.mixer = new THREE.AnimationMixer( object );
-			game.player.mixer = object.mixer;
-			game.player.root = object.mixer.getRoot();
-			
-			object.name = "FireFighter";
-					
-			object.traverse( function ( child ) {
-				if ( child.isMesh ) {
-					child.castShadow = true;
-					child.receiveShadow = false;		
-				}
-			} );
-			
-            const tLoader = new THREE.TextureLoader();
-            tLoader.load(`${game.assetsPath}images/SimplePeople_FireFighter_Brown.png`, function(texture){
-				object.traverse( function ( child ) {
-					if ( child.isMesh ){
-						child.material.map = texture;
-					}
-				} );
-			});
-            
-            game.player.object = new THREE.Object3D();
-			game.scene.add(game.player.object);
-			game.player.object.add(object);
-			game.animations.Idle = object.animations[0];
-            
             game.loadNextAnim(loader);
 		} );
 		
@@ -142,26 +110,6 @@ class Game{
 		window.addEventListener( 'resize', function(){ game.onWindowResize(); }, false );
 	}
 	
-    loadNextAnim(loader){
-		let anim = this.anims.pop();
-		const game = this;
-		loader.load( `${this.assetsPath}fbx/anims/${anim}.fbx`, function( object ){
-			game.animations[anim] = object.animations[0];
-			if (game.anims.length>0){
-				game.loadNextAnim(loader);
-			}else{
-                game.createCameras();
-                game.joystick = new JoyStick({
-                    onMove: game.playerControl,
-                    game: game
-                });
-				delete game.anims;
-				game.action = "Idle";
-				game.animate();
-			}
-		});	
-	}
-    
     loadNextAnim(loader){
 		let anim = this.anims.pop();
 		const game = this;

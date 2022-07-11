@@ -58,7 +58,7 @@ class Game{
 		}
 		
 		this.anims.forEach( function(anim){ options.assets.push(`${game.assetsPath}fbx/anims/${anim}.fbx`)});
-		options.assets.push(`${game.assetsPath}fbx/All.glb`);
+		options.assets.push(`${game.assetsPath}fbx/town.fbx`);
 		
 		this.mode = this.modes.PRELOAD;
 		
@@ -147,9 +147,9 @@ class Game{
 		window.addEventListener( 'resize', () => game.onWindowResize(), false );
 	}
 	
-	loadEnvironment(loaderMap){
+	loadEnvironment(loader){
 		const game = this;
-		loaderMap.load(`${this.assetsPath}fbx/All.glb`, function(gltf){
+		loader.load(`${this.assetsPath}fbx/town.fbx`, function(object){
 			game.environment = object;
 			game.colliders = [];
 			game.scene.add(object);
@@ -444,7 +444,6 @@ class Player{
 		this.animations = this.game.animations;
 		
 		const loader = new THREE.FBXLoader();
-		const loaderMap = new THREE.GLTFLoader();
 		const player = this;
 		
 		loader.load( `${game.assetsPath}fbx/people/${model}.fbx`, function ( object ) {

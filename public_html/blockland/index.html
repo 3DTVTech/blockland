@@ -123,6 +123,13 @@
 			background: #3B53A2;
 			transition: opacity 0.5s;
 		}
+		#controler-player {
+			position: absolute;
+			right: 1104px;
+			bottom: -14px;
+
+
+		}
 
 		#animation-case ul {
 			list-style: none;
@@ -189,6 +196,10 @@
 	<div id="message">
 		<p id="message_text"></p>
 		<button id="message_ok">OK</button>
+	</div>
+	<div id="controler-player">
+		<p id="controler-player-text">Control Player</p>
+
 	</div>
 	<div id="chat">
 		<form id="msg-form" action="">
@@ -283,7 +294,6 @@
 							</tr>
 						</tbody>
 					</table>
-
 				</form>
 			</div>
 		</div>
@@ -293,7 +303,6 @@
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"
 		integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe"
 		crossorigin="anonymous"></script>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
@@ -315,6 +324,6 @@
 		var game;
 		document.addEventListener("DOMContentLoaded", function () { game = new Game(); });
 	</script>
-</body>
 
+</body>
 </html>

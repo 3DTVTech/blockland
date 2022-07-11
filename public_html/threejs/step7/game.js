@@ -78,16 +78,16 @@ class Game{
 				}
 			} );
 			
-			// const tloader = new THREE.CubeTextureLoader();
-			// tloader.setPath( `${game.assetsPath}/images/` );
+			const tloader = new THREE.CubeTextureLoader();
+			tloader.setPath( `${game.assetsPath}/images/` );
 
-			// var textureCube = tloader.load( [
-			// 	'px.jpg', 'nx.jpg',
-			// 	'py.jpg', 'ny.jpg',
-			// 	'pz.jpg', 'nz.jpg'
-			// ] );
+			var textureCube = tloader.load( [
+				'px.jpg', 'nx.jpg',
+				'py.jpg', 'ny.jpg',
+				'pz.jpg', 'nz.jpg'
+			] );
 
-			// game.scene.background = textureCube;
+			game.scene.background = textureCube;
 			
 			game.animate();
 		})

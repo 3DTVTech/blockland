@@ -1,4 +1,3 @@
-
 class Game{
 	constructor(){
 		if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -10,7 +9,7 @@ class Game{
 		this.camera;
 		this.scene;
 		this.renderer;
-		
+		this.controls;
 		this.container = document.createElement( 'div' );
 		this.container.style.height = '100%';
 		document.body.appendChild( this.container );
@@ -32,7 +31,7 @@ class Game{
 	init() {
 
 		this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 5000 );
-		this.camera.position.set(112, 100, 600);
+		this.camera.position.set(1121, 1000, 600);
         
 		this.scene = new THREE.Scene();
 		this.scene.background = new THREE.Color( 0xa0a0a0 );
@@ -46,18 +45,16 @@ class Game{
 		light = new THREE.DirectionalLight( 0xffffff );
 		light.position.set( 0, 200, 100 );
 		light.castShadow = true;
-
 		light.shadow.camera.top = shadowSize;
 		light.shadow.camera.bottom = -shadowSize;
 		light.shadow.camera.left = -shadowSize;
 		light.shadow.camera.right = shadowSize;
 		this.scene.add( light );
         this.sun = light;
-
-		// const ligth_helper = new THREE.Ca
 		const lightCameraHelper = new THREE.CameraHelper(light.shadow.camera);
-        // lightCameraHelper.visible = false;
-        this.scene.add(lightCameraHelper);
+	lightCameraHelper.visible = true;
+	this.scene.add(lightCameraHelper);
+		
 
 		// ground
 		var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 10000, 10000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
@@ -72,16 +69,15 @@ class Game{
 
 		// model
 		const loader = new THREE.FBXLoader();
-		
 		const game = this;
 		
-		loader.load( `${this.assetsPath}fbx/people/Male_Idle.fbx`, function ( object ) {
+		loader.load( `${this.assetsPath}fbx/people/FireFighter.fbx`, function ( object ) {
 
 			object.mixer = new THREE.AnimationMixer( object );
 			game.player.mixer = object.mixer;
 			game.player.root = object.mixer.getRoot();
 			
-			object.name = "Male_Idle";
+			object.name = "FireFighter";
 					
 			object.traverse( function ( child ) {
 				if ( child.isMesh ) {
@@ -90,6 +86,15 @@ class Game{
 				}
 			} );
 			
+            const tLoader = new THREE.TextureLoader();
+            tLoader.load(`${game.assetsPath}images/SimplePeople_FireFighter_Brown.png`, function(texture){
+				object.traverse( function ( child ) {
+					if ( child.isMesh ){
+						child.material.map = texture;
+					}
+				} );
+			});
+            
             game.player.object = new THREE.Object3D();
 			game.scene.add(game.player.object);
 			game.player.object.add(object);
@@ -103,6 +108,9 @@ class Game{
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		this.renderer.shadowMap.enabled = true;
 		this.container.appendChild( this.renderer.domElement );
+		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+		this.controls.target.set(0, 150, 0);
+		this.controls.update();
         
 		window.addEventListener( 'resize', function(){ game.onWindowResize(); }, false );
 	}
@@ -116,9 +124,7 @@ class Game{
 				game.loadNextAnim(loader);
 			}else{
                 game.createCameras();
-                game.loadEnvironment(loader);
-				// loadScene(loadermap);
-                // game.loadscenes(loader);
+                game.createColliders();
                 game.joystick = new JoyStick({
                     onMove: game.playerControl,
                     game: game
@@ -130,53 +136,28 @@ class Game{
 		});	
 	}
     
-    loadEnvironment(loader){
-		const game = this;
-		loader.load(`${this.assetsPath}fbx/Map_testCOL.fbx`, function(object){
-			const scaleFactor = 10;
-			game.environment = object;
-			game.colliders = [];
-			// object.scale.set(10,10,10)
-
-			game.scene.add(object);
-            
-			object.traverse( function ( child ) {
-				if ( child.isMesh ) {
-					if (child.name.startsWith("proxy")){
-						game.colliders.push(child);
-						child.material.visible = false;
-					}else{
-						child.castShadow = true;
-						child.receiveShadow = true;
-					}
-				}
-			} );
-			
-			const tloader = new THREE.CubeTextureLoader();
-			tloader.setPath( `${game.assetsPath}/images/` );
-
-			var textureCube = tloader.load( [
-				'px.jpg', 'nx.jpg',
-				'py.jpg', 'ny.jpg',
-				'pz.jpg', 'nz.jpg'
-			] );
-
-			game.scene.background = textureCube;
-			
-			game.animate();
-		})
-	}
-	
-    loadScene(loadermap){
-		const game = this;
-		loadermap.load(`${this.assetsPath}fbx/All.glb`, function(gltf){
-			game.environment = gltf;
-			game.colliders = [];
-			gltf.scale.set(500,500,500)
-			game.scene.add(gltf);
-			game.animate();
-		})
-	}
+    createColliders(){
+        const geometry = new THREE.BoxGeometry(500, 400, 500);
+        const material = new THREE.MeshBasicMaterial({color:0x222222, wireframe:true});
+        
+        this.colliders = [];
+        
+        for (let x=-5000; x<5000; x+=1000){
+            for (let z=-5000; z<5000; z+=1000){
+                if (x==0 && z==0) continue;
+                const box = new THREE.Mesh(geometry, material);
+                box.position.set(x, 250, z);
+                this.scene.add(box);
+                this.colliders.push(box);
+            }
+        }
+        
+        const geometry2 = new THREE.BoxGeometry(1000, 40, 1000);
+        const stage = new THREE.Mesh(geometry2, material);
+        stage.position.set(0, 20, 0);
+        this.colliders.push(stage);
+        this.scene.add(stage);
+    }
     
     movePlayer(dt){
 		const pos = this.player.object.position.clone();
@@ -197,7 +178,7 @@ class Game{
 		
 		if (!blocked){
 			if (this.player.move.forward>0){
-				const speed = (this.player.action=='Running') ? 1000 : 150;
+				const speed = (this.player.action=='Running') ? 400 : 150;
 				this.player.object.translateZ(dt*speed);
 			}else{
 				this.player.object.translateZ(-dt*30);
@@ -312,9 +293,9 @@ class Game{
 		}
 	}
     
-    set activeCamera(object){
-		this.player.cameras.active = object;
-	}
+    // set activeCamera(object){
+	// 	this.player.cameras.active = object;
+	// }
     
     createCameras(){
 		const offset = new THREE.Vector3(0, 80, 0);
