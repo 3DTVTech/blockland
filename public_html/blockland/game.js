@@ -65,7 +65,7 @@ class Game {
 	  this.anims.forEach(function (anim) {
 		options.assets.push(`${game.assetsPath}fbx/anims/${anim}.fbx`);
 	  });
-	  options.assets.push(`${game.assetsPath}fbx/Map_testCOL.fbx`);
+	  options.assets.push(`${game.assetsPath}fbx/Map_SSS_02.fbx`);
   
 	  this.mode = this.modes.PRELOAD;
   
@@ -123,14 +123,16 @@ class Game {
 	  // this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 10, 200000 );
   
 	  this.scene = new THREE.Scene();
-	  this.scene.background = new THREE.Color(0xffffff);
+	//   this.scene.background = new THREE.Color(0xffffff);
   
-	  let light = new THREE.AmbientLight(0xffffff);
+	  let light = new THREE.AmbientLight(0xFFFBF2
+		
+		);
   
 	  this.scene.add(light);
   
 	  const shadowSize = 30000;
-	  light = new THREE.DirectionalLight(0xE0E0E0);
+	  light = new THREE.DirectionalLight(0xFFFBF2);
 	  light.position.set(0, 6000, 1000);
   
 	  light.castShadow = true;
@@ -172,12 +174,12 @@ class Game {
 	  this.renderer.shadowMap.enabled = true;
 	  this.container.appendChild(this.renderer.domElement);
   
-	  this.controls = new THREE.OrbitControls(
-		this.camera,
-		this.renderer.domElement
-	  );
-	  this.controls.target.set(0, 150, 0);
-	  this.controls.update();
+	//   this.controls = new THREE.OrbitControls(
+	// 	this.camera,
+	// 	this.renderer.domElement
+	//   );
+	//   this.controls.target.set(0, 150, 0);
+	//   this.controls.update();
   
 	  if ("ontouchstart" in window) {
 		window.addEventListener(
@@ -198,7 +200,7 @@ class Game {
   
 	loadEnvironment(loader) {
 	  const game = this;
-	  loader.load(`${this.assetsPath}fbx/Map_testCOL.fbx`, function (object) {
+	  loader.load(`${this.assetsPath}fbx/Map_SSS_02.fbx`, function (object) {
 		// game.object.scale.set(0.5 , 0.5 , 0.5);
 		game.environment = object;
 		game.colliders = [];
@@ -222,12 +224,12 @@ class Game {
 		tloader.setPath(`${game.assetsPath}/images/`);
   
 		var textureCube = tloader.load([
-		  "px.jpg",
-		  "nx.jpg",
-		  "py.jpg",
-		  "ny.jpg",
-		  "pz.jpg",
-		  "nz.jpg",
+		  "px.png",
+		  "nx.png",
+		  "py.png",
+		  "ny.png",
+		  "pz.png",
+		  "nz.png",
 		]);
   
 		game.scene.background = textureCube;
@@ -252,13 +254,13 @@ class Game {
 	}
 	npc01(loader) {
 		const game = this;
-		loader.load( `${this.assetsPath}fbx/people/OldLady_Wave.fbx`, function ( object ) {
+		loader.load( `${this.assetsPath}fbx/people/Old_Lady.fbx`, function ( object ) {
 
 			object.mixer = new THREE.AnimationMixer( object );
 			game.npc.mixer = object.mixer;
 			game.npc.root = object.mixer.getRoot();
 			
-			object.name = "OldLady_Wave";
+			object.name = "Old_Lady";
 					
 			object.traverse( function ( child ) {
 				if ( child.isMesh ) {
