@@ -13,6 +13,7 @@ class Game {
 	  this.mode = this.modes.NONE;
 	  this.container;
 	  this.player;
+	  this.npc = { };
 	  this.cameras;
 	  this.camera;
 	  this.controls;
@@ -122,14 +123,14 @@ class Game {
 	  // this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 10, 200000 );
   
 	  this.scene = new THREE.Scene();
-	  this.scene.background = new THREE.Color(0xa0a0a0);
+	  this.scene.background = new THREE.Color(0xffffff);
   
-	  let light = new THREE.AmbientLight(0xaaaaaa);
+	  let light = new THREE.AmbientLight(0xffffff);
   
 	  this.scene.add(light);
   
 	  const shadowSize = 30000;
-	  light = new THREE.DirectionalLight(0xaaaaaa);
+	  light = new THREE.DirectionalLight(0xE0E0E0);
 	  light.position.set(0, 6000, 1000);
   
 	  light.castShadow = true;
@@ -250,30 +251,32 @@ class Game {
 	  });
 	}
 	npc01(loader) {
-	  loader.load(
-		`${this.assetsPath}fbx/people/OldLady_Idle.fbx`,
-		function (object) {
-		  object.mixer = new THREE.AnimationMixer(object);
-		  // game.player.mixer = object.mixer;
-		  // game.player.root = object.mixer.getRoot();
-  
-		  object.name = "OldLady_Idle";
-  
-		  object.traverse(function (child) {
-			if (child.isMesh) {
-			  child.material.map = null;
-			  child.castShadow = true;
-			  child.receiveShadow = false;
-			}
-		  });
-		  object.position.set(-100, 10, 7000);
-		  object.scale.set(4, 4, 4);
-		  game.scene.add(object);
-		  // game.player.object = object;
-		  game.player.mixer.clipAction(object.animations[0]).play();
-		  game.animate();
-		}
-	  );
+		const game = this;
+		loader.load( `${this.assetsPath}fbx/people/OldLady_Wave.fbx`, function ( object ) {
+
+			object.mixer = new THREE.AnimationMixer( object );
+			game.npc.mixer = object.mixer;
+			game.npc.root = object.mixer.getRoot();
+			
+			object.name = "OldLady_Wave";
+					
+			object.traverse( function ( child ) {
+				if ( child.isMesh ) {
+					child.castShadow = true;
+					child.receiveShadow = false;		
+				}
+			} );
+			
+       
+            
+			game.scene.add(object);
+			game.npc.object = object;
+			game.npc.mixer.clipAction(object.animations[0]).play();
+            game.animate();
+
+			object.position.set(-100, 10, 7000);
+			object.scale.set(4, 4, 4);
+		} );
 	}
   
    
@@ -522,7 +525,8 @@ class Game {
 		}
 		this.camera.lookAt(pos);
 	  }
-  
+	  if (this.npc.mixer!==undefined) this.npc.mixer.update(dt)
+
 	  if (this.sun !== undefined) {
 		this.sun.position.copy(this.camera.position);
 		this.sun.position.y += 10;
@@ -533,7 +537,21 @@ class Game {
   
 	  this.renderer.render(this.scene, this.camera);
 	}
+
+	// animateNPC() {
+	// 	const game = this;
+	// 	const npcdata = this.clock.getDelta();
+		
+	// 	requestAnimationFrame( function(){ game.animateNPC(); } );
+		
+	// 	// if (this.npc.mixer!==undefined) this.npc.mixer.update(npcdata);
+		
+	// 	// this.renderer.render( this.scene, this.camera );
+
+	// }
   }
+
+  	
   
   class Player {
 	constructor(game, options) {
