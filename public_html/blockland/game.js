@@ -116,7 +116,7 @@ class Game {
 	  this.camera = new THREE.PerspectiveCamera(
 		45,
 		window.innerWidth / window.innerHeight,
-		10,
+		400,
 		200000
 	  );
 	  this.camera.position.set(5000, 4000, -5000);
@@ -317,7 +317,7 @@ class Game {
 	  front.position.set(112, 100, 600);
 	  front.parent = this.player.object;
 	  const back = new THREE.Object3D();
-	  back.position.set(0, 300, -900);
+	  back.position.set(0, 350, -800);
 	  back.parent = this.player.object;
 	  const chat = new THREE.Object3D();
 	  chat.position.set(0, 200, -450);
