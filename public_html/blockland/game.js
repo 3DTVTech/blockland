@@ -566,8 +566,8 @@ class Game {
   
 	  if (options === undefined) {
 		// const people = ['Male_Idle','BeachBabe', 'BusinessMan', 'Doctor', 'FireFighter', 'Housewife', 'Policeman', 'Prostitute', 'Punk', 'RiotCop', 'Roadworker', 'Robber', 'Sheriff', 'Streetman', 'Waitress' , 'MALE_SSS'];
-		// const people = ['mremireh_o_desbiens', 'MALE_SSS'];
-		const people = ["Male_Idle"];
+		const people = ['Male_purple', 'Male_Idle', 'Male_yellow'];
+		// const people = ["Male_Idle"];
 		model = people[Math.floor(Math.random() * people.length)];
 	  } else if (typeof options == "object") {
 		this.local = false;
