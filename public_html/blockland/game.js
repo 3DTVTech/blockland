@@ -131,19 +131,20 @@ class Game {
   
 	  this.scene.add(light);
   
-	  const shadowSize = 30000;
+	  const shadowSize = 5000;
 	  light = new THREE.DirectionalLight(0xFFFBF2);
-	  light.position.set(0, 6000, 1000);
+	  light.position.set(0, 10000, 0);
+	  light.target.position.set( 0, 0, 0 );
   
 	  light.castShadow = true;
 	  light.shadow.camera.far = 12000;
-	  light.shadow.camera.top = shadowSize;
-	  light.shadow.camera.bottom = -shadowSize;
+	  light.shadow.camera.top = 0;
+	  light.shadow.camera.bottom = -13000;
 	  light.shadow.camera.left = -shadowSize;
 	  light.shadow.camera.right = shadowSize;
 	  // light.shadow.bias = 1;
-	  light.shadow.mapSize.width = 30000;
-	  light.shadow.mapSize.height = 30000;
+	  light.shadow.mapSize.width = 3000;
+	  light.shadow.mapSize.height = 3000;
 	  this.scene.add(light);
 	//   const lightCameraHelper = new THREE.CameraHelper(light.shadow.camera);
 	//   lightCameraHelper.visible = true;
