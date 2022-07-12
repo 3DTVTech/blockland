@@ -277,7 +277,7 @@ class Game {
             game.animate();
 
 			object.position.set(-100, 10, 7000);
-			object.scale.set(4, 4, 4);
+			object.scale.set(4.3, 4.3, 4.3);
 		} );
 	}
   
